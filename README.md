@@ -1,4 +1,0 @@
-alphaworm
-=========
-
-Alphaworm source codes

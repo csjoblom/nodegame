@@ -5,13 +5,10 @@ var MessageHandler = require('./server/messagehandler');
 var GameAPI = require('./server/gameapi');
 
 function GameServer() {
-
   // Set some internal variables
   this.setupVariables();
-
   // Call tnitialize and start server, when the server object is created
   this.init();
-
 }
 
 GameServer.prototype.setupVariables = function() {
@@ -60,12 +57,11 @@ GameServer.prototype.init = function() {
   this.messageBroker = new MessageBroker(this);
   this.messageHandler = new MessageHandler();
   this.gameAPI = new GameAPI();
-
+  
   // Link the objects:
   // Incoming: MessageBroker -> MessageHandler -> GameAPI
   this.messageBroker.attachMessageHandler(this.messageHandler);
   this.messageHandler.attachGameAPI(this.gameAPI);
-
   // Outgoing: GameAPI -> MessageHandler -> MessageBroker
   this.gameAPI.attachMessageHandler(this.messageHandler);
   this.messageHandler.attachMessageBroker(this.messageBroker);

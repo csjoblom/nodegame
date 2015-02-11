@@ -1,30 +1,32 @@
 {
-  "name": "nodeGame",
+  "name": "Alphaworm-in-OpenShift",
   "version": "1.0.0",
-  "description": "nodeGame running on OpenShift",
+  "description": "Alphaworm app running in OpenShift",
   "keywords": [
-    "Node.js"
+    "openshift",
+    "Node.js",
+    "alphaworm",
+    "nodebooks"
   ],
   "author": {
-    "name": "Chris Sjoblom",
-    "email": "chris.sjoblom@gmail.com",
-    "url": "http://twitter.com/csjoblom"
+    "name": "Jaakko Vanhala",
+    "email": "nodebooks@gmail.com",
+    "url": "http://notavailabledotcom"
   },
-  "homepage": "http://twitter.com/csjoblom",
+  "homepage": "http://www.openshift.com/",
   "repository": {
     "type": "git",
-    "url": "https://www.github.com/csjoblom/nodegame"
+    "url": "https://www.github.com/nodebooks/alphaworm"
   },
   "engines": {
     "node": ">= 0.10.0",
     "npm": ">= 1.0.0"
   },
   "dependencies": {
+    "ws": "0.4.31",
     "express": "3.3.8",
-    "mysql": "~2.0.0-alpha9",
-    "node-mysql": "^0.4.2",
     "utils": "*",
-    "ws": "0.4.31"
+    "mysql": "~2.0.0-alpha9"
   },
   "devDependencies": {},
   "bundleDependencies": [],

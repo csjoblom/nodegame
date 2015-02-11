@@ -1,21 +1,21 @@
-function MessageBroker() {
-  this.messageHandler = undefined;
+function MessageBroker(messageHandler) {
+  this.messageHandler = messageHandler;
   this.init();
 }
 
 MessageBroker.prototype.init = function() {
   console.log("MessageBroker started");
 
-  //hook for callbacks
+  // Hook for callbacks
   var self = this;
-  
+
   // The websocketURI we received from the server
   console.log("websocketURI = ", websocketURI);
   this.ws = new WebSocket('ws://' + websocketURI);
 
   this.ws.onmessage = function (event) {
-    console.log("received message:", event);
-    document.getElementById('system-messages').innerHTML += "<br />Received message:"+ JSON.parse(event.data);
+    console.log("MSG:", JSON.parse(event.data));
+    self.receive(event.data);
   };
 
   this.ws.onerror = function (event) {
@@ -31,15 +31,15 @@ MessageBroker.prototype.init = function() {
   this.ws.onclose = function (event) {
     console.log("websocket disconnected");
     document.getElementById('system-messages').innerHTML += "<br />Websocket disconnected";
-
   };
-},
+};
 
-MessageBroker.prototype.attachHandler = function(messageHandler) {
-  this.messageHandler = messageHandler;
-},
+MessageBroker.prototype.receive = function(msg) {
+  // Use JSON.parse() to deserialize the JavaScript object
+  this.messageHandler.receive(JSON.parse(msg));
+};
 
-MessageBroker.prototype.send = function(msg){
-  //use json.stringify() to serialize message to a javascript object
+MessageBroker.prototype.send = function(msg) {
+  // Use JSON.stringify() to serialize message to a JavaScript object
   this.ws.send(JSON.stringify(msg));
-}
+};

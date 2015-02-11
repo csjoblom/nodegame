@@ -6,13 +6,16 @@ function MessageBroker() {
 MessageBroker.prototype.init = function() {
   console.log("MessageBroker started");
 
+  //hook for callbacks
+  var self = this;
+  
   // The websocketURI we received from the server
   console.log("websocketURI = ", websocketURI);
   this.ws = new WebSocket('ws://' + websocketURI);
 
   this.ws.onmessage = function (event) {
     console.log("received message:", event);
-    document.getElementById('system-messages').innerHTML += "<br />Received message:", JSON.parse(event.data);
+    document.getElementById('system-messages').innerHTML += "<br />Received message:"+ JSON.parse(event.data);
   };
 
   this.ws.onerror = function (event) {
@@ -34,4 +37,9 @@ MessageBroker.prototype.init = function() {
 
 MessageBroker.prototype.attachHandler = function(messageHandler) {
   this.messageHandler = messageHandler;
+},
+
+MessageBroker.prototype.send = function(msg){
+  //use json.stringify() to serialize message to a javascript object
+  this.ws.send(JSON.stringify(msg));
 }

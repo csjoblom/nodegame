@@ -1,45 +1,57 @@
 function MessageBroker(messageHandler) {
-    this.messageHandler = messageHandler;
-    this.init();
+
+  this.messageHandler = messageHandler;
+
+  this.init();
 }
 
 MessageBroker.prototype.init = function() {
-    console.log("MessageBroker started");
 
-    // Hook for callbacks
-    var self = this;
+  var self = this;
+  console.log("MessageBroker started");
 
-    // The websocketURI we received from the server
-    console.log("websocketURI = ", websocketURI);
-    this.ws = new WebSocket('ws://' + websocketURI);
+  // The websocketURI we received from the server
+  console.log("websocketURI = ", websocketURI);
+  this.ws = new WebSocket('ws://' + websocketURI);
 
-    this.ws.onmessage = function(event) {
-        console.log("MSG:", JSON.parse(event.data));
-        self.receive(event.data);
-    };
+  this.ws.onmessage = function (event) {
+    console.log("MSG:", JSON.parse(event.data));
+    self.receive(event.data);
+  };
 
-    this.ws.onerror = function(event) {
-        console.log("websocket failed");
-        document.getElementById('system-messages').innerHTML += "<br />Websocket failed";
-    };
+  this.ws.onerror = function (event) {
+    console.log("websocket failed");
+    var recv = { name: "CHAT_MESSAGE",
+                 username: "System notice",
+                 text: "<strong>connection failed:</strong>" + event };
+    self.messageHandler.receive(recv);
+  };
 
-    this.ws.onopen = function(event) {
-        console.log("websocket connected");
-        document.getElementById('system-messages').innerHTML += "<br />Websocket connected";
-    };
+  this.ws.onopen = function (event) {
+    console.log("websocket connected");
+    var recv = { name: "CHAT_MESSAGE",
+                 username: "System notice",
+                 text: "<strong>connection established.</strong>" };
+    self.messageHandler.receive(recv);
+  };
 
-    this.ws.onclose = function(event) {
-        console.log("websocket disconnected");
-        document.getElementById('system-messages').innerHTML += "<br />Websocket disconnected";
-    };
+  this.ws.onclose = function (event) {
+    console.log("websocket disconnected");
+    var recv = { name: "CHAT_MESSAGE",
+                 username: "System notice",  
+                 text: "<strong>disconnected</strong>" };
+    self.messageHandler.receive(recv);
+
+  };
 };
 
 MessageBroker.prototype.receive = function(msg) {
-    // Use JSON.parse() to deserialize the JavaScript object
-    this.messageHandler.receive(JSON.parse(msg));
+  // JSON.parse creates a JavaScript object
+  this.messageHandler.receive(JSON.parse(msg));
 };
 
 MessageBroker.prototype.send = function(msg) {
-    // Use JSON.stringify() to serialize message to a JavaScript object
-    this.ws.send(JSON.stringify(msg));
+  // JSON.stringify serialises a JavaScript object 
+  // (i.e. makes object a string)
+  this.ws.send(JSON.stringify(msg));
 };

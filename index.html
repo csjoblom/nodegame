@@ -3,13 +3,15 @@
 <head>
   <meta charset="utf-8" />
 
-  <title>nodeGame Iteration Two</title>
+  <title>nodeGame</title>
 
   <script src="./client/messagebroker.js" type="text/javascript"></script>
   <script src="./client/messagehandler.js" type="text/javascript"></script>
   <script src="./common/messages.js" type="text/javascript"></script>
 
   <script src="./client/sha-hash.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" href="client/uistyle.css">
 
   <!-- Pass the websocketURI to the client -->
   <script src="/websocketURI.js"></script>
@@ -18,7 +20,7 @@
     function initNodegame() {
       // TODO: Improve game init in the near future
       //var messageBroker = new MessageBroker();
-      messageHandler = new MessageHandler(); // global scope
+      messageHandler = new MessageHandler();
     }
 
     function logout() {
@@ -27,7 +29,6 @@
     }
 
     function login() {
-
       // Check user input fields
       if (document.getElementById("username").value && document.getElementById("password").value) {
         // Send login request
@@ -49,29 +50,73 @@
         messageHandler.send(msg);
       }
     }
-  </script>
-  </head>
 
-  <body onload="initNodegame();">
-    <div id="container">
-      <div id="login">
-        <div id="loginwindow">
-          <fieldset>
-            <legend><strong>Login</strong></legend>
-            <div id="infotext">
-              <p>
-                Player: <input type="text" id="username" length="10">
-                Password: <input type="password" id="password" length="20">
-                <input id="login_button" type="submit" value="Login" onclick="login()">
-                <input id="register_button" type="submit" value="Register" onclick="register()">
-              </p>
-            </div>
-          </fieldset>
-        </div>
-      </div>
-      <div id="system-messages">
-        System messages appear here!
+    function chatKeypress(event) {
+      event.preventDefault;
+      if (event.which == 13 || event.keyCode == 13) {
+          // Send only if length > 0
+          var chatmsg = document.getElementById('chatmessage').value;
+          if (chatmsg) {
+            var msg = messages.message.CHAT_MESSAGE.new();
+            msg.username = messageHandler.getUsername();
+            msg.text = chatmsg;
+            messageHandler.send(msg);
+            document.getElementById('chatmessage').value = "";
+          }
+        }
+      return true; // NOTE! return false; does not update textbox
+    }
+
+  </script>
+</head>
+
+<body onload="initNodegame();">
+  <div class="container">
+    <div id="login">
+      <div id="loginwindow">
+        <fieldset>
+          <legend><strong>Login</strong></legend>
+          <div id="infotext">
+            <p>
+              Player: <input type="text" id="username" size="10" maxlength="10">
+              Password: <input type="password" id="password" size="10" maxlength="20">
+              <input id="login_button" type="submit" value="Login" onclick="login()">
+              <input id="register_button" type="submit" value="Register" onclick="register()">
+            </p>
+          </div>
+        </fieldset>
       </div>
     </div>
-  </body>
+    <div id="onlineplayers">
+      <fieldset>
+        <legend><strong>Online players</strong></legend>
+        <div id="onlineplayerlist">
+          <div id="onlineplayer">bomb</div>
+        </div>
+      </fieldset>
+    </div>
+    <div id="rankinglist">
+      <fieldset>
+        <legend><strong>Player ranking</strong></legend>
+        <div id="rankedplayers">
+          <div id="rankedplayer">bomb</div>
+        </div>
+      </fieldset>
+    </div>
+    <div id="gameboard">
+      <p>This is a placeholder for the gameboard.</p>
+    </div>
+    <div id="chat">
+      <fieldset>
+        <legend><strong>Messages</strong></legend>
+        <div id="chatbox">
+          <div id="messagebox"></div>
+        </div>
+        <div id="sendmessage">
+          Send: <input type="text" id="chatmessage" size="40" maxlength="140" onkeypress="return chatKeypress(event)">
+        </div>
+      </fieldset>
+    </div>
+  </div>
+</body>
 </html>
